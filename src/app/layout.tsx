@@ -5,6 +5,7 @@ import { InquiryProvider } from "../context/InquiryContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import InquiryDrawer from "../components/InquiryDrawer";
+import FloatingActions from "../components/FloatingActions";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -49,9 +50,11 @@ export default function RootLayout({
             {children}
           </main>
           <InquiryDrawer />
+          <FloatingActions />
           <Footer />
         </InquiryProvider>
       </body>
     </html>
   );
 }
+

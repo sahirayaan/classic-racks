@@ -8,9 +8,11 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand Info */}
           <div className="footer-brand">
-            <h4>
-              CLASSIC<span>RACKS</span>
-            </h4>
+            <img
+              src="/logo.jpg"
+              alt="Classic Racks"
+              style={{ height: "80px", width: "auto", marginBottom: "1rem", objectFit: "contain" }}
+            />
             <p>
               Premium manufacturer of highly durable, fine-finished display
               racks and supermarket fixtures. Serving businesses since 2007

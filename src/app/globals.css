@@ -3,36 +3,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  /* Color System (Light Steel Industrial Theme) */
-  --bg-main: #F8FAFC; /* Slate 50 */
-  --bg-card: #FFFFFF;
-  --bg-card-hover: #F1F5F9;
-  --bg-input: #EDF2F7;
-  --fg-main: #0F172A; /* Slate 900 */
-  --fg-muted: #475569; /* Slate 600 */
-  
-  --primary: #EA580C; /* Safety Industrial Orange */
-  --primary-hover: #C2410C;
-  --primary-glow: rgba(234, 88, 12, 0.1);
-  
-  --secondary: #38BDF8; /* Steel Sky Blue */
-  --secondary-glow: rgba(56, 189, 248, 0.1);
-  
-  --border: rgba(15, 23, 42, 0.08);
-  --border-hover: rgba(234, 88, 12, 0.2);
-  
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 16px 48px rgba(15, 23, 42, 0.12);
-  
-  --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  /* ── Light Theme — matched to Classic Racks logo ── */
+  --bg-main:       #F8F9FA;   /* Off-white page bg */
+  --bg-card:       #FFFFFF;   /* Pure white cards */
+  --bg-card-hover: #FEF6F8;   /* Slight rose tint on hover */
+  --bg-input:      #F1F3F5;   /* Input fields */
+
+  --fg-main:  #1A1A2E;   /* Near-black text */
+  --fg-muted: #64748B;   /* Slate muted text */
+
+  /* Primary — Rose Pink (logo arc colour) */
+  --primary:       #D64F7A;
+  --primary-hover: #B83D65;
+  --primary-glow:  rgba(214, 79, 122, 0.12);
+
+  /* Accent — Coral Red (logo figure colour) */
+  --accent:        #E04B2C;
+  --accent-glow:   rgba(224, 75, 44, 0.1);
+
+  --border:       rgba(26, 26, 46, 0.09);
+  --border-hover: rgba(214, 79, 122, 0.3);
+
+  --shadow-sm: 0 2px 8px rgba(26, 26, 46, 0.06);
+  --shadow-md: 0 8px 28px rgba(26, 26, 46, 0.10);
+  --shadow-lg: 0 20px 56px rgba(26, 26, 46, 0.14);
+
+  --font-family-sans:    'Inter', system-ui, -apple-system, sans-serif;
   --font-family-display: 'Outfit', sans-serif;
-  
+
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-fast: all 0.15s ease;
-  
+  --transition-fast:   all 0.15s ease;
+
   --max-width: 1200px;
 }
+
 
 /* Base Styles */
 * {
@@ -213,7 +217,7 @@ img {
   left: 0;
   right: 0;
   z-index: 100;
-  background-color: rgba(248, 250, 252, 0.8);
+  background-color: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   transition: var(--transition-smooth);
@@ -229,15 +233,16 @@ img {
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-family-display);
-  font-weight: 800;
-  font-size: 1.35rem;
-  color: var(--fg-main);
+  text-decoration: none;
 }
 
-.logo span {
-  color: var(--primary);
+/* Cropped logo image — shows only the icon+text area */
+.logo-img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  object-position: center;
+  display: block;
 }
 
 .nav-menu {
