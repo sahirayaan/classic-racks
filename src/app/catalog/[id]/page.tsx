@@ -4,7 +4,7 @@ import ProductDetailClient from "../../../components/ProductDetailClient";
 import type { Metadata } from "next";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // Generate static paths for all products
@@ -14,7 +14,8 @@ export async function generateStaticParams() {
 
 // Dynamic SEO metadata per product
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = productsData.find((p) => p.id === params.id);
+  const { id } = await params;
+  const product = productsData.find((p) => p.id === id);
   if (!product) return { title: "Product Not Found | Classic Racks" };
 
   const specSummary = Object.entries(product.specifications)
@@ -33,8 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function ProductDetailPage({ params }: Props) {
-  const product = productsData.find((p) => p.id === params.id);
+export default async function ProductDetailPage({ params }: Props) {
+  const { id } = await params;
+  const product = productsData.find((p) => p.id === id);
 
   if (!product) {
     notFound();
