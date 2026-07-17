@@ -238,7 +238,7 @@ img {
 
 /* Cropped logo image — shows only the icon+text area */
 .logo-img {
-  height: 52px;
+  height: 60px;
   width: auto;
   object-fit: contain;
   object-position: center;

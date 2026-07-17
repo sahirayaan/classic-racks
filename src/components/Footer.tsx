@@ -9,7 +9,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="footer-brand">
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               alt="Classic Racks"
               style={{ height: "80px", width: "auto", marginBottom: "1rem", objectFit: "contain" }}
             />

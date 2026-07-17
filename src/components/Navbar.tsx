@@ -47,7 +47,7 @@ export default function Navbar() {
         <div className="container header-container">
           <Link href="/" className="logo">
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               alt="Classic Racks — We design a new way of your business"
               className="logo-img"
             />
