@@ -422,9 +422,11 @@ img {
 }
 
 .footer-links h5 {
-  color: var(--fg-main);
+  color: #FFFFFF;
   font-size: 1.05rem;
   margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 
 .footer-list {

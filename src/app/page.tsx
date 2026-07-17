@@ -721,7 +721,7 @@ export default function Home() {
 
         /* ── CTA BANNER ── */
         .cta-banner {
-          background: linear-gradient(135deg, #B83D65 0%, #D64F7A 50%, #E04B2C 100%);
+          background: linear-gradient(135deg, #0057B8 0%, #00438E 100%);
           padding: 4.5rem 0;
         }
         .cta-inner {
