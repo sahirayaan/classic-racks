@@ -164,9 +164,9 @@ const categories = [
 
 // ── Stats ────────────────────────────────────────────
 const stats = [
-  { value: "15+", label: "Years Experience" },
-  { value: "500+", label: "Happy Clients" },
-  { value: "19", label: "Product Categories" },
+  { value: "20+", label: "Years Experience" },
+  { value: "5000+", label: "Happy Clients" },
+  { value: "50+", label: "Type of Products" },
   { value: "Pan-India", label: "Delivery" },
 ];
 
