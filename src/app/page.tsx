@@ -383,10 +383,10 @@ export default function Home() {
           position: absolute;
           inset: 0;
           background: linear-gradient(
-            135deg,
-            rgba(26, 10, 18, 0.78) 0%,
-            rgba(214, 79, 122, 0.22) 60%,
-            rgba(0,0,0,0.1) 100%
+            to top,
+            rgba(0, 0, 0, 0.75) 0%,
+            rgba(0, 0, 0, 0.35) 60%,
+            rgba(0, 0, 0, 0.15) 100%
           );
         }
 
@@ -396,8 +396,9 @@ export default function Home() {
           left: 0;
           right: 0;
           padding: 0 1.5rem;
-          color: #fff;
+          color: #ffffff;
           max-width: 700px;
+          z-index: 2;
         }
 
         .hero-tag {
@@ -411,6 +412,7 @@ export default function Home() {
           padding: 0.3rem 0.85rem;
           border-radius: 9999px;
           margin-bottom: 1rem;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .hero-title {
@@ -418,15 +420,17 @@ export default function Home() {
           font-weight: 900;
           line-height: 1.15;
           margin-bottom: 0.9rem;
-          text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+          color: #ffffff !important;
+          text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.95), -1px -1px 0 rgba(0, 0, 0, 0.4), 1px -1px 0 rgba(0, 0, 0, 0.4), -1px 1px 0 rgba(0, 0, 0, 0.4), 1px 1px 0 rgba(0, 0, 0, 0.4);
         }
 
         .hero-sub {
           font-size: clamp(0.9rem, 2vw, 1.1rem);
-          color: rgba(255,255,255,0.85);
+          color: #ffffff !important;
           line-height: 1.6;
           margin-bottom: 1.75rem;
           max-width: 540px;
+          text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.95);
         }
 
         .hero-actions {
