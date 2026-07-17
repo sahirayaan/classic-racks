@@ -807,28 +807,7 @@ export default function Home() {
 
         /* 2-col → 1-col */
         @media (max-width: 480px) {
-          .cat-grid { grid-template-columns: 1fr; gap: 0.85rem; }
-
-          /* On phone: horizontal card layout */
-          .cat-card {
-            flex-direction: row;
-            min-height: 110px;
-          }
-          .cat-img-wrap {
-            width: 120px;
-            min-width: 120px;
-            aspect-ratio: unset;
-            height: auto;
-            border-right: 1px solid var(--border);
-          }
-          .cat-info { padding: 0.75rem; }
-          .cat-name { font-size: 0.88rem; }
-          .cat-arrow { 
-            padding: 0.75rem 0.75rem 0.75rem 0; 
-            display: flex;
-            align-items: center;
-          }
-
+          .cat-grid { grid-template-columns: 1fr; gap: 1.25rem; }
           .why-grid { grid-template-columns: 1fr; }
           .hero-arrow { display: none; }
           .stats-grid { grid-template-columns: repeat(2, 1fr); }
