@@ -173,6 +173,18 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
+        @media (max-width: 768px) {
+          .modal-backdrop {
+            padding: 0;
+            align-items: flex-end;
+          }
+          .modal-content {
+            border-radius: 1.25rem 1.25rem 0 0;
+            max-height: 93vh;
+            width: 100%;
+          }
+        }
+
         .modal-close {
           position: absolute;
           top: 1rem;

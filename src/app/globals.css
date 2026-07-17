@@ -73,8 +73,16 @@ button, input, select, textarea {
 
 img {
   max-width: 100%;
-  height: auto;
   display: block;
+}
+
+/* Card images must fill their fixed-height container — override height:auto */
+.card-image-container img,
+.card-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  padding: 0.75rem !important;
 }
 
 /* Common Layout Containers */
@@ -120,6 +128,10 @@ img {
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .grid-3 { grid-template-columns: 1fr; gap: 1.25rem; }
 }
 
 @media (max-width: 640px) {
