@@ -1,141 +1,213 @@
 "use client";
 
-import React from "react";
-import { useInquiry } from "../context/InquiryContext";
+import React, { useState, useRef } from "react";
+import Link from "next/link";
 
-interface ProductCardProps {
-  product: {
-    id: string;
-    name: string;
-    category: string;
-    categoryLabel: string;
-    description: string;
-    specifications: Record<string, any>;
-    image: string;
-  };
-  onViewDetails: () => void;
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  categoryLabel: string;
+  description: string;
+  specifications: Record<string, any>;
+  features: string[];
+  image: string;
+  images?: string[];
 }
 
-export default function ProductCard({ product, onViewDetails }: ProductCardProps) {
-  const { addItem } = useInquiry();
+interface ProductCardProps {
+  product: Product;
+}
 
-  // Pick the most informative spec to display on card preview
+export default function ProductCard({ product }: ProductCardProps) {
+  const allImages = (product.images && product.images.length > 0)
+    ? product.images
+    : [product.image].filter(Boolean);
+
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  // ── Touch Swipe Tracking ──
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const swipeDetected = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) return; // ignore pinch
+    touchStartX.current = e.touches[0].clientX;
+    swipeDetected.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) return;
+    touchEndX.current = e.touches[0].clientX;
+    const delta = Math.abs(touchEndX.current - touchStartX.current);
+    if (delta > 8) swipeDetected.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!swipeDetected.current) return;
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 30) {
+      if (diff > 0) {
+        setActiveSlide((p) => (p + 1) % allImages.length);
+      } else {
+        setActiveSlide((p) => (p - 1 + allImages.length) % allImages.length);
+      }
+    }
+  };
+
+  // Key spec to show briefly on card
   const specKeys = Object.keys(product.specifications);
-  const materialKey = specKeys.find((k) => k.toLowerCase().includes("material"));
-  const capacityKey = specKeys.find((k) => k.toLowerCase().includes("capacity"));
-  const keySpecKey = materialKey || capacityKey || specKeys[0];
+  const materialKey = specKeys.find((k) => k.toLowerCase() === "material");
+  const capKey = specKeys.find((k) => k.toLowerCase().includes("capacity"));
+  const keySpecKey = materialKey || capKey || specKeys[0];
   const keySpecVal = keySpecKey ? String(product.specifications[keySpecKey] || "").trim() : "";
 
   return (
-    <div className="product-card">
-      {/* Image Section */}
-      <div className="card-image-wrap">
-        {product.image ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            className="card-img"
-          />
-        ) : (
-          <div className="image-placeholder">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" />
+    <div className="pcard">
+      {/* ── Swipeable Image Area ── */}
+      <div
+        className="pcard-img-wrap"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <Link
+          href={`/catalog/${product.id}`}
+          className="pcard-img-link"
+          onClick={(e) => {
+            // prevent navigation if user was swiping
+            if (swipeDetected.current) e.preventDefault();
+          }}
+        >
+          {allImages.length > 0 ? (
+            <img
+              src={allImages[activeSlide]}
+              alt={`${product.name} - image ${activeSlide + 1}`}
+              className="pcard-img"
+            />
+          ) : (
+            <div className="pcard-no-img">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
+              <span>No Image</span>
+            </div>
+          )}
+        </Link>
+
+        {/* Category Badge */}
+        <span className="pcard-badge">{product.categoryLabel}</span>
+
+        {/* Slide dots */}
+        {allImages.length > 1 && (
+          <div className="pcard-dots">
+            {allImages.map((_, i) => (
+              <button
+                key={i}
+                className={`pdot${i === activeSlide ? " active" : ""}`}
+                onClick={(e) => { e.stopPropagation(); setActiveSlide(i); }}
+                aria-label={`Image ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Image counter */}
+        {allImages.length > 1 && (
+          <span className="pcard-counter">{activeSlide + 1}/{allImages.length}</span>
+        )}
+      </div>
+
+      {/* ── Card Body - entire area is a link ── */}
+      <Link href={`/catalog/${product.id}`} className="pcard-body-link">
+        <div className="pcard-body">
+          <h3 className="pcard-name">{product.name}</h3>
+          {keySpecKey && keySpecVal && (
+            <p className="pcard-meta">
+              <span className="meta-key">{keySpecKey}:</span>
+              <span className="meta-val">{keySpecVal}</span>
+            </p>
+          )}
+          <div className="pcard-tap-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 18l6-6-6-6"/>
             </svg>
-            <span>No Image</span>
+            <span>View Details</span>
           </div>
-        )}
-        <span className="card-badge">{product.categoryLabel}</span>
-      </div>
-
-      {/* Content Section */}
-      <div className="card-body">
-        <h3 className="card-title">{product.name}</h3>
-        <p className="card-desc">{product.description}</p>
-
-        {keySpecKey && keySpecVal && (
-          <div className="card-spec-row">
-            <span className="spec-key">{keySpecKey}:</span>
-            <span className="spec-val">{keySpecVal}</span>
-          </div>
-        )}
-
-        <div className="card-actions">
-          <button onClick={onViewDetails} className="btn btn-secondary card-btn">
-            View Details
-          </button>
-          <button
-            onClick={() => addItem(product.id, product.name, product.categoryLabel)}
-            className="btn btn-primary card-btn"
-          >
-            Add to Quote
-          </button>
         </div>
-      </div>
+      </Link>
 
       <style jsx>{`
-        /* ── Card Shell ── */
-        .product-card {
-          background-color: var(--bg-card);
+        /* ── Card Wrapper ── */
+        .pcard {
+          background: var(--bg-card);
           border: 1px solid var(--border);
-          border-radius: 0.85rem;
+          border-radius: 1rem;
           overflow: hidden;
-          transition: var(--transition-smooth);
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
           display: flex;
           flex-direction: column;
-          height: 100%;
-          box-shadow: var(--shadow-sm);
+          width: 100%;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
         }
 
-        .product-card:hover {
-          border-color: var(--border-hover);
+        .pcard:hover {
           box-shadow: var(--shadow-md);
-          transform: translateY(-4px);
+          transform: translateY(-3px);
+        }
+
+        .pcard:active {
+          transform: scale(0.99);
         }
 
         /* ── Image Wrapper ── */
-        .card-image-wrap {
-          width: 100%;
-          height: 220px;
+        .pcard-img-wrap {
           position: relative;
-          background-color: #f9f9f9;
-          border-bottom: 1px solid var(--border);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          width: 100%;
+          aspect-ratio: 4/3;
+          background: #f4f4f4;
           overflow: hidden;
-          flex-shrink: 0;
+          border-bottom: 1px solid var(--border);
         }
 
-        /* Force image to fill and contain within wrapper */
-        .card-img {
-          position: absolute;
-          top: 0;
-          left: 0;
+        .pcard-img-link {
+          display: block;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+        }
+
+        .pcard-img {
           width: 100%;
           height: 100%;
           object-fit: contain;
-          padding: 12px;
-          transition: transform 0.3s ease;
+          padding: 1rem;
+          transition: transform 0.35s ease;
+          display: block;
         }
 
-        .product-card:hover .card-img {
+        .pcard:hover .pcard-img {
           transform: scale(1.04);
         }
 
-        .image-placeholder {
+        .pcard-no-img {
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
+          height: 100%;
           gap: 0.5rem;
           color: var(--fg-muted);
           font-size: 0.75rem;
-          opacity: 0.6;
+          opacity: 0.5;
         }
 
         /* ── Badge ── */
-        .card-badge {
+        .pcard-badge {
           position: absolute;
           top: 0.6rem;
           left: 0.6rem;
@@ -143,125 +215,133 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
           font-size: 0.6rem;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
-          background-color: rgba(11, 15, 25, 0.82);
-          backdrop-filter: blur(4px);
+          letter-spacing: 0.06em;
+          background: rgba(11, 15, 25, 0.78);
+          backdrop-filter: blur(6px);
           color: var(--primary);
-          padding: 0.2rem 0.55rem;
+          padding: 0.2rem 0.6rem;
           border-radius: 9999px;
-          border: 1px solid rgba(234, 88, 12, 0.3);
+          border: 1px solid rgba(234, 88, 12, 0.35);
           pointer-events: none;
         }
 
-        /* ── Body ── */
-        .card-body {
-          padding: 1.1rem 1.25rem 1.25rem;
+        /* ── Image counter ── */
+        .pcard-counter {
+          position: absolute;
+          bottom: 0.55rem;
+          right: 0.65rem;
+          z-index: 2;
+          font-size: 0.65rem;
+          font-weight: 600;
+          background: rgba(0,0,0,0.55);
+          color: #fff;
+          padding: 0.15rem 0.45rem;
+          border-radius: 9999px;
+          pointer-events: none;
+        }
+
+        /* ── Slide Dots ── */
+        .pcard-dots {
+          position: absolute;
+          bottom: 0.55rem;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 3;
           display: flex;
-          flex-direction: column;
-          flex-grow: 1;
-          gap: 0.6rem;
-        }
-
-        .card-title {
-          font-size: 1.05rem;
-          font-weight: 700;
-          color: var(--fg-main);
-          line-height: 1.3;
-          margin: 0;
-        }
-
-        .card-desc {
-          font-size: 0.82rem;
-          color: var(--fg-muted);
-          line-height: 1.55;
-          margin: 0;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          flex-grow: 1;
-        }
-
-        /* ── Spec Row ── */
-        .card-spec-row {
-          display: flex;
+          gap: 5px;
           align-items: center;
-          gap: 0.4rem;
-          background-color: rgba(234, 88, 12, 0.05);
-          border: 1px dashed rgba(234, 88, 12, 0.2);
-          border-radius: 0.35rem;
-          padding: 0.4rem 0.65rem;
-          font-size: 0.78rem;
-          flex-wrap: wrap;
+          pointer-events: auto;
         }
 
-        .spec-key {
-          color: var(--fg-muted);
-          font-weight: 500;
+        .pdot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.45);
+          border: none;
+          padding: 0;
+          cursor: pointer;
+          transition: background 0.2s, width 0.2s;
           flex-shrink: 0;
         }
 
-        .spec-val {
-          color: var(--fg-main);
-          font-weight: 700;
+        .pdot.active {
+          background: var(--primary);
+          width: 16px;
+          border-radius: 3px;
         }
 
-        /* ── Actions ── */
-        .card-actions {
+        /* ── Card Body ── */
+        .pcard-body-link {
+          text-decoration: none;
+          color: inherit;
+          display: block;
+        }
+
+        .pcard-body {
+          padding: 0.85rem 1rem 1rem;
           display: flex;
-          gap: 0.6rem;
-          margin-top: auto;
-          padding-top: 0.4rem;
+          flex-direction: column;
+          gap: 0.35rem;
         }
 
-        .card-btn {
-          flex: 1;
-          padding: 0.55rem 0.5rem;
-          font-size: 0.8rem;
-          border-radius: 0.4rem;
-          text-align: center;
+        .pcard-name {
+          font-size: 0.97rem;
+          font-weight: 700;
+          color: var(--fg-main);
+          margin: 0;
+          line-height: 1.35;
         }
 
-        /* ── Mobile: Horizontal layout ── */
+        .pcard-meta {
+          font-size: 0.78rem;
+          color: var(--fg-muted);
+          margin: 0;
+          display: flex;
+          gap: 0.3rem;
+          flex-wrap: wrap;
+        }
+
+        .meta-key {
+          font-weight: 500;
+        }
+
+        .meta-val {
+          color: var(--fg-main);
+          font-weight: 600;
+        }
+
+        .pcard-tap-hint {
+          display: flex;
+          align-items: center;
+          gap: 0.2rem;
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: var(--primary);
+          margin-top: 0.2rem;
+          opacity: 0.8;
+        }
+
+        /* ── Mobile overrides ── */
         @media (max-width: 768px) {
-          .product-card {
-            flex-direction: row;
-            height: auto;
-            min-height: 140px;
-            align-items: stretch;
+          .pcard {
+            border-radius: 0.85rem;
           }
 
-          .card-image-wrap {
-            width: 130px;
-            height: auto;
-            min-height: 140px;
-            flex-shrink: 0;
-            border-bottom: none;
-            border-right: 1px solid var(--border);
-            border-radius: 0;
+          .pcard-img-wrap {
+            aspect-ratio: 3/2;
           }
 
-          .card-body {
-            padding: 0.9rem 1rem;
-            gap: 0.45rem;
+          .pcard-img {
+            padding: 0.6rem;
           }
 
-          .card-title {
-            font-size: 0.95rem;
+          .pcard-body {
+            padding: 0.7rem 0.85rem 0.85rem;
           }
 
-          .card-desc {
-            font-size: 0.78rem;
-            -webkit-line-clamp: 2;
-          }
-
-          .card-actions {
-            gap: 0.4rem;
-          }
-
-          .card-btn {
-            padding: 0.45rem 0.35rem;
-            font-size: 0.75rem;
+          .pcard-name {
+            font-size: 0.92rem;
           }
         }
       `}</style>

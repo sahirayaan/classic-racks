@@ -3,118 +3,107 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
-import ProductModal from "./ProductModal";
 import productsData from "../data/products.json";
 
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  categoryLabel: string;
-  description: string;
-  specifications: Record<string, any>;
-  features: string[];
-  image: string;
-  images?: string[];
-}
-
-// Dynamically build categories list from products database
-const uniqueCategories = Array.from(
-  new Set(productsData.map((p) => p.category))
-).map((catId) => {
+// Build unique categories from data
+const uniqueCategories = Array.from(new Set(productsData.map((p) => p.category))).map((catId) => {
   const p = productsData.find((p) => p.category === catId);
-  return {
-    id: catId,
-    label: p ? p.categoryLabel : catId,
-  };
+  return { id: catId, label: p ? p.categoryLabel : catId };
 });
 
-const categoriesList = [
-  { id: "all", label: "All Products" },
-  ...uniqueCategories,
-];
+const categoriesList = [{ id: "all", label: "All" }, ...uniqueCategories];
 
 export default function CatalogClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   const initialCat = searchParams.get("cat") || "all";
   const [selectedCategory, setSelectedCategory] = useState(initialCat);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeProduct, setActiveProduct] = useState<Product | null>(null);
 
-  // Sync category state when URL changes
   useEffect(() => {
     const cat = searchParams.get("cat");
-    if (cat) {
-      setSelectedCategory(cat);
-    } else {
-      setSelectedCategory("all");
-    }
+    setSelectedCategory(cat || "all");
   }, [searchParams]);
 
   const handleCategorySelect = (catId: string) => {
     setSelectedCategory(catId);
-    if (catId === "all") {
-      router.push("/catalog");
-    } else {
-      router.push(`/catalog?cat=${catId}`);
-    }
+    router.push(catId === "all" ? "/catalog" : `/catalog?cat=${catId}`);
   };
 
-  // Filter products based on search and category
   const filteredProducts = productsData.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "all" || product.category === selectedCategory;
+    const matchesCat = selectedCategory === "all" || product.category === selectedCategory;
+    const q = searchQuery.toLowerCase();
     const matchesSearch =
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      Object.entries(product.specifications).some(([key, val]) =>
-        val.toLowerCase().includes(searchQuery.toLowerCase())
+      !q ||
+      product.name.toLowerCase().includes(q) ||
+      product.description.toLowerCase().includes(q) ||
+      Object.values(product.specifications).some((v) =>
+        String(v).toLowerCase().includes(q)
       );
-    return matchesCategory && matchesSearch;
+    return matchesCat && matchesSearch;
   });
 
   return (
-    <div className="catalog-container animate-fade">
-      {/* Category Header */}
+    <div className="catalog-page animate-fade">
+      {/* ── Page Hero ── */}
       <div className="catalog-hero">
         <div className="container">
           <span className="badge">Classic Racks Showcase</span>
-          <h2>Our Complete Product Catalog</h2>
+          <h1>Our Complete Product Catalog</h1>
           <p>
-            Browse our wide range of supermarket display fixtures, heavy-duty warehouse racking,
-            and customized store checkout accessories. Select products to request a custom quote.
+            Browse supermarket display fixtures, heavy-duty warehouse racking, and custom store
+            checkout accessories. Tap any product to explore details.
           </p>
         </div>
       </div>
 
-      <div className="container catalog-body-layout">
-        {/* Sidebar Filter / Search Bar */}
-        <aside className="catalog-sidebar">
-          <div className="sidebar-widget">
-            <h4>Search Catalog</h4>
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Search specs, material, name..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="form-control"
-              />
-            </div>
-          </div>
+      {/* ── Mobile: Sticky Top Toolbar ── */}
+      <div className="mobile-toolbar">
+        <div className="mobile-search-row">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="form-control mobile-search-input"
+          />
+        </div>
+        <div className="mobile-chips-scroll">
+          {categoriesList.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleCategorySelect(cat.id)}
+              className={`chip${selectedCategory === cat.id ? " chip-active" : ""}`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
+      {/* ── Desktop: Sidebar + Grid ── */}
+      <div className="container catalog-layout">
+        {/* Sidebar (desktop only) */}
+        <aside className="catalog-sidebar desktop-only">
+          <div className="sidebar-widget">
+            <h4>Search</h4>
+            <input
+              type="text"
+              placeholder="Name, material, specs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="form-control"
+            />
+          </div>
           <div className="sidebar-widget">
             <h4>Categories</h4>
-            <div className="category-buttons">
+            <div className="sidebar-cats">
               {categoriesList.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => handleCategorySelect(cat.id)}
-                  className={`category-filter-btn ${
-                    selectedCategory === cat.id ? "active" : ""
-                  }`}
+                  className={`sidebar-cat-btn${selectedCategory === cat.id ? " active" : ""}`}
                 >
                   {cat.label}
                 </button>
@@ -123,172 +112,285 @@ export default function CatalogClient() {
           </div>
         </aside>
 
-        {/* Products Grid */}
-        <main className="catalog-products-main">
-          <div className="catalog-results-header">
-            <p>
-              Showing <span>{filteredProducts.length}</span> products
-            </p>
-          </div>
+        {/* Products Area */}
+        <main className="catalog-main">
+          <p className="results-count">
+            Showing <strong>{filteredProducts.length}</strong> products
+          </p>
 
           {filteredProducts.length === 0 ? (
             <div className="no-results">
-              <h4>No products match your search.</h4>
-              <p>Try adjusting your filters or search keywords.</p>
+              <h4>No products found</h4>
+              <p>Try a different search term or category.</p>
               <button
-                onClick={() => {
-                  setSearchQuery("");
-                  handleCategorySelect("all");
-                }}
                 className="btn btn-primary"
                 style={{ marginTop: "1rem" }}
+                onClick={() => { setSearchQuery(""); handleCategorySelect("all"); }}
               >
                 Reset Filters
               </button>
             </div>
           ) : (
-            <div className="grid-3">
+            <div className="products-grid">
               {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onViewDetails={() => setActiveProduct(product)}
-                />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
         </main>
       </div>
 
-      {/* Product Specification Modal */}
-      {activeProduct && (
-        <ProductModal
-          product={activeProduct}
-          onClose={() => setActiveProduct(null)}
-        />
-      )}
-
       <style jsx>{`
+        /* ── Page ── */
+        .catalog-page {
+          min-height: 100vh;
+        }
+
+        /* ── Hero ── */
         .catalog-hero {
           background-color: var(--bg-card);
           border-bottom: 1px solid var(--border);
-          padding: 4rem 0;
+          padding: 4rem 0 3rem;
           text-align: center;
-          margin-bottom: 3rem;
         }
 
-        .catalog-hero h2 {
-          font-size: 2.5rem;
-          margin: 0.75rem 0;
+        .catalog-hero h1 {
+          font-size: 2.4rem;
+          margin: 0.75rem 0 0.65rem;
           color: var(--fg-main);
         }
 
         .catalog-hero p {
-          max-width: 700px;
+          max-width: 680px;
           margin: 0 auto;
           color: var(--fg-muted);
-          line-height: 1.6;
+          line-height: 1.65;
+          font-size: 0.95rem;
         }
 
-        .catalog-body-layout {
+        /* ── Mobile Toolbar (hidden on desktop) ── */
+        .mobile-toolbar {
+          display: none;
+          position: sticky;
+          top: 4.5rem;
+          z-index: 50;
+          background: var(--bg-main);
+          border-bottom: 1px solid var(--border);
+          padding: 0.65rem 0.85rem 0;
+          backdrop-filter: blur(8px);
+          gap: 0;
+        }
+
+        .mobile-search-row {
+          margin-bottom: 0.5rem;
+        }
+
+        .mobile-search-input {
+          width: 100%;
+          font-size: 0.9rem;
+        }
+
+        .mobile-chips-scroll {
+          display: flex;
+          gap: 0.45rem;
+          overflow-x: auto;
+          padding-bottom: 0.65rem;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+
+        .mobile-chips-scroll::-webkit-scrollbar {
+          display: none;
+        }
+
+        .chip {
+          flex-shrink: 0;
+          padding: 0.35rem 0.85rem;
+          border-radius: 9999px;
+          font-size: 0.78rem;
+          font-weight: 600;
+          border: 1px solid var(--border);
+          background: transparent;
+          color: var(--fg-muted);
+          cursor: pointer;
+          transition: all 0.18s ease;
+          white-space: nowrap;
+        }
+
+        .chip:hover {
+          border-color: var(--primary);
+          color: var(--primary);
+        }
+
+        .chip.chip-active {
+          background: var(--primary);
+          border-color: var(--primary);
+          color: #000;
+        }
+
+        /* ── Layout ── */
+        .catalog-layout {
           display: grid;
-          grid-template-columns: 280px 1fr;
-          gap: 3rem;
+          grid-template-columns: 270px 1fr;
+          gap: 2.5rem;
+          padding-top: 3rem;
           padding-bottom: 6rem;
+          align-items: start;
         }
 
-        @media (max-width: 900px) {
-          .catalog-body-layout {
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-          }
-          .category-buttons {
-            flex-direction: row !important;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            gap: 0.5rem;
-          }
-          .category-filter-btn {
-            text-align: center !important;
-            flex-shrink: 0;
-            padding: 0.5rem 1rem !important;
-            font-size: 0.85rem;
-          }
+        /* ── Desktop Sidebar ── */
+        .catalog-sidebar {
+          position: sticky;
+          top: 7rem;
         }
 
         .sidebar-widget {
-          background-color: var(--bg-card);
+          background: var(--bg-card);
           border: 1px solid var(--border);
           border-radius: 0.75rem;
-          padding: 1.5rem;
-          margin-bottom: 1.5rem;
+          padding: 1.25rem;
+          margin-bottom: 1.25rem;
         }
 
         .sidebar-widget h4 {
-          font-size: 0.95rem;
+          font-size: 0.88rem;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.06em;
           color: var(--fg-main);
-          margin-bottom: 1rem;
+          margin-bottom: 0.85rem;
           border-bottom: 1px solid var(--border);
           padding-bottom: 0.5rem;
         }
 
-        .category-buttons {
+        .sidebar-cats {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.25rem;
         }
 
-        .category-filter-btn {
+        .sidebar-cat-btn {
           text-align: left;
           background: none;
           border: 1px solid transparent;
           color: var(--fg-muted);
-          padding: 0.75rem 1rem;
+          padding: 0.6rem 0.85rem;
           font-weight: 500;
-          border-radius: 0.5rem;
+          font-size: 0.88rem;
+          border-radius: 0.45rem;
           cursor: pointer;
-          transition: var(--transition-fast);
+          transition: all 0.15s ease;
+          width: 100%;
         }
 
-        .category-filter-btn:hover {
+        .sidebar-cat-btn:hover {
           color: var(--fg-main);
-          background-color: var(--bg-card-hover);
+          background: var(--bg-card-hover);
         }
 
-        .category-filter-btn.active {
+        .sidebar-cat-btn.active {
           color: var(--primary);
-          background-color: var(--primary-glow);
-          border-color: rgba(245, 158, 11, 0.2);
-          font-weight: 600;
-        }
-
-        .catalog-results-header {
-          margin-bottom: 1.5rem;
-          font-size: 0.9rem;
-          color: var(--fg-muted);
-        }
-
-        .catalog-results-header span {
-          color: var(--primary);
+          background: var(--primary-glow);
+          border-color: rgba(234, 88, 12, 0.2);
           font-weight: 700;
         }
 
+        /* ── Products Main ── */
+        .catalog-main {
+          min-width: 0;
+        }
+
+        .results-count {
+          font-size: 0.85rem;
+          color: var(--fg-muted);
+          margin-bottom: 1.25rem;
+        }
+
+        .results-count strong {
+          color: var(--primary);
+        }
+
+        /* ── Products Grid ── */
+        .products-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.5rem;
+        }
+
+        /* ── No Results ── */
         .no-results {
           text-align: center;
           padding: 4rem 2rem;
-          background-color: var(--bg-card);
+          background: var(--bg-card);
           border: 1px solid var(--border);
-          border-radius: 0.75rem;
+          border-radius: 0.85rem;
         }
 
         .no-results h4 {
-          font-size: 1.25rem;
+          font-size: 1.2rem;
           color: var(--fg-main);
           margin-bottom: 0.5rem;
+        }
+
+        /* ── Desktop-only elements ── */
+        .desktop-only {
+          display: block;
+        }
+
+        /* ────────────────────────────────────────
+           RESPONSIVE BREAKPOINTS
+        ──────────────────────────────────────── */
+
+        /* 3-col → 2-col at 1100px */
+        @media (max-width: 1100px) {
+          .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        /* Switch to mobile layout at 900px */
+        @media (max-width: 900px) {
+          .catalog-layout {
+            grid-template-columns: 1fr;
+            padding-top: 1rem;
+            gap: 1.25rem;
+          }
+
+          .desktop-only {
+            display: none;
+          }
+
+          .mobile-toolbar {
+            display: flex;
+            flex-direction: column;
+          }
+
+          .products-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+
+          .catalog-hero {
+            padding: 2.5rem 0 2rem;
+          }
+
+          .catalog-hero h1 {
+            font-size: 1.7rem;
+          }
+
+          .catalog-hero p {
+            font-size: 0.875rem;
+          }
+        }
+
+        /* Fine-tune small phones */
+        @media (max-width: 480px) {
+          .catalog-hero {
+            padding: 2rem 0 1.5rem;
+          }
+
+          .catalog-hero h1 {
+            font-size: 1.45rem;
+          }
         }
       `}</style>
     </div>
