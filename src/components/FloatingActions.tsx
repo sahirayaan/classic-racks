@@ -68,7 +68,7 @@ export default function FloatingActions() {
         }
 
         .call-btn {
-          background: linear-gradient(135deg, #D64F7A 0%, #E04B2C 100%);
+          background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
         }
 
         @media (max-width: 768px) {

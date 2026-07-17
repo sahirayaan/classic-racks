@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ── Slate Grey & Safety Orange Theme ── */
+  /* ── Brushed Steel Navy & Golden Amber Theme ── */
   --bg-main:       #F8FAFC;   /* Slate 50 page bg */
   --bg-card:       #FFFFFF;   /* Pure white cards */
   --bg-card-hover: #F1F5F9;   /* Slate 100 on hover */
@@ -12,17 +12,18 @@
   --fg-main:  #0F172A;   /* Slate 900 text */
   --fg-muted: #475569;   /* Slate 600 muted text */
 
-  /* Primary — Safety Orange (Industrial action colour) */
-  --primary:       #F97316;
-  --primary-hover: #EA580C;
-  --primary-glow:  rgba(249, 115, 22, 0.12);
+  /* Primary — Steel Navy (Brushed steel brand color) */
+  --primary:       #0F172A;
+  --primary-hover: #1E293B;
+  --primary-glow:  rgba(15, 23, 42, 0.1);
 
-  /* Accent — Slate Grey (Brushed steel brand color) */
-  --accent:        #334155;
-  --accent-glow:   rgba(51, 65, 85, 0.1);
+  /* Accent — Golden Amber (Industrial highlight) */
+  --accent:        #F59E0B;
+  --accent-hover: #D97706;
+  --accent-glow:   rgba(245, 158, 11, 0.12);
 
   --border:       rgba(15, 23, 42, 0.08);
-  --border-hover: rgba(249, 115, 22, 0.3);
+  --border-hover: rgba(245, 158, 11, 0.35);
 
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
   --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
@@ -155,9 +156,9 @@ img {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background-color: var(--primary-glow);
-  color: var(--primary);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  background-color: var(--accent-glow);
+  color: var(--accent);
+  border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 /* Buttons */
