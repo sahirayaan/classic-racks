@@ -3,31 +3,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ── Brushed Steel Navy & Golden Amber Theme ── */
-  --bg-main:       #F8FAFC;   /* Slate 50 page bg */
+  /* ── User Preferred Industrial Theme ── */
+  --bg-main:       #FFFFFF;   /* Pure white page bg */
   --bg-card:       #FFFFFF;   /* Pure white cards */
-  --bg-card-hover: #F1F5F9;   /* Slate 100 on hover */
-  --bg-input:      #EDF2F7;   /* Input fields */
+  --bg-card-hover: #F0F6FC;   /* Very light blue tint on hover */
+  --bg-input:      #F1F3F5;   /* Light gray inputs */
 
-  --fg-main:  #0F172A;   /* Slate 900 text */
-  --fg-muted: #475569;   /* Slate 600 muted text */
+  --fg-main:  #222222;   /* Dark charcoal text */
+  --fg-muted: #555555;   /* Medium gray muted text */
 
-  /* Primary — Steel Navy (Brushed steel brand color) */
-  --primary:       #0F172A;
-  --primary-hover: #1E293B;
-  --primary-glow:  rgba(15, 23, 42, 0.1);
+  /* Primary — Royal Blue (Brand identity) */
+  --primary:       #0057B8;
+  --primary-hover: #00438E;
+  --primary-glow:  rgba(0, 87, 184, 0.09);
 
-  /* Accent — Golden Amber (Industrial highlight) */
-  --accent:        #F59E0B;
-  --accent-hover: #D97706;
-  --accent-glow:   rgba(245, 158, 11, 0.12);
+  /* Accent — Safety Yellow (Button color) */
+  --accent:        #FFC400;
+  --accent-hover: #E6B000;
+  --accent-glow:   rgba(255, 196, 0, 0.15);
 
-  --border:       rgba(15, 23, 42, 0.08);
-  --border-hover: rgba(245, 158, 11, 0.35);
+  --border:       rgba(0, 87, 184, 0.08);
+  --border-hover: rgba(0, 87, 184, 0.25);
 
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 16px 48px rgba(15, 23, 42, 0.12);
+  --shadow-sm: 0 2px 8px rgba(34, 34, 34, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 87, 184, 0.08);
+  --shadow-lg: 0 16px 48px rgba(0, 87, 184, 0.12);
 
   --font-family-sans:    'Inter', system-ui, -apple-system, sans-serif;
   --font-family-display: 'Outfit', sans-serif;
@@ -156,9 +156,9 @@ img {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background-color: var(--accent-glow);
-  color: var(--accent);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background-color: var(--primary-glow);
+  color: var(--primary);
+  border: 1px solid var(--primary-glow);
 }
 
 /* Buttons */
@@ -177,15 +177,15 @@ img {
 }
 
 .btn-primary {
-  background-color: var(--primary);
-  color: #fff;
-  box-shadow: 0 4px 14px var(--primary-glow);
+  background-color: var(--accent);
+  color: var(--fg-main);
+  box-shadow: 0 4px 14px var(--accent-glow);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 6px 20px rgba(255, 196, 0, 0.3);
 }
 
 .btn-secondary {
