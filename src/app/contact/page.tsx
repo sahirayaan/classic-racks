@@ -159,7 +159,11 @@ export default function Contact() {
             </div>
             <div className="info-item">
               <span className="info-icon">📞</span>
-              <a href="tel:+918047823850">+91 8047823850</a>
+              <a href="tel:+919871718151">+91 9871718151</a>
+            </div>
+            <div className="info-item">
+              <span className="info-icon">💬</span>
+              <a href="https://wa.me/919971464447" target="_blank" rel="noopener noreferrer">+91 9971464447 (WhatsApp)</a>
             </div>
             <div className="info-item">
               <span className="info-icon">✉️</span>

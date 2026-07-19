@@ -45,7 +45,7 @@ export default function InquiryDrawer() {
       alert("Please fill in your Name and Phone Number.");
       return;
     }
-    const waUrl = `https://wa.me/918047823850?text=${generateMessageText()}`;
+    const waUrl = `https://wa.me/919971464447?text=${generateMessageText()}`;
     window.open(waUrl, "_blank");
     setSubmitted(true);
     clearCart();

@@ -7,7 +7,7 @@ export default function FloatingActions() {
     <div className="floating-actions">
       {/* WhatsApp Button */}
       <a
-        href="https://wa.me/918047823850?text=Hi%20Classic%20Racks%2C%20I%20am%20interested%20in%20your%20display%20racks."
+        href="https://wa.me/919971464447?text=Hi%20Classic%20Racks%2C%20I%20am%20interested%20in%20your%20display%20racks."
         target="_blank"
         rel="noopener noreferrer"
         className="floating-btn whatsapp-btn"
@@ -20,7 +20,7 @@ export default function FloatingActions() {
 
       {/* Call Button */}
       <a
-        href="tel:+918047823850"
+        href="tel:+919871718151"
         className="floating-btn call-btn"
         aria-label="Call Us"
       >

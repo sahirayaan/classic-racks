@@ -74,7 +74,11 @@ export default function Footer() {
               </li>
               <li style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
                 <span>📞</span>
-                <a href="tel:+918047823850">+91 8047823850</a>
+                <a href="tel:+919871718151">+91 9871718151</a>
+              </li>
+              <li style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                <span>💬</span>
+                <a href="https://wa.me/919971464447" target="_blank" rel="noopener noreferrer">+91 9971464447 (WhatsApp)</a>
               </li>
               <li style={{ display: "flex", gap: "0.5rem" }}>
                 <span>✉️</span>
