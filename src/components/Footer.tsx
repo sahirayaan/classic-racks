@@ -93,15 +93,8 @@ export default function Footer() {
           <p>© {new Date().getFullYear()} Classic Racks. All Rights Reserved.</p>
           <div className="footer-credits">
             <span>Verified Manufacturer from Delhi</span> |{" "}
-            <a
-              href="https://www.indiamart.com/terms-of-use.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: "underline" }}
-            >
-              IndiaMART Member
-            </a>
-        </div>
+            <span>IndiaMART Member</span>
+          </div>
       </div>
     </div>
   </footer>
