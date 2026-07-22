@@ -682,16 +682,16 @@ export default function ProductDetailClient({ product }: Props) {
 
         @media (max-width: 768px) {
           .detail-slider {
-            max-height: 320px;
+            max-height: 420px;
           }
 
           .detail-img-viewport {
-            max-height: 320px;
-            padding: 0.75rem;
+            max-height: 420px;
+            padding: 0.25rem;
           }
 
           .detail-img {
-            max-height: 290px;
+            max-height: 390px;
           }
 
           .slider-arrow {

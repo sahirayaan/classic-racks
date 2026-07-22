@@ -215,6 +215,9 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             padding: 1.75rem;
             gap: 1.75rem;
           }
+          .modal-img-viewport {
+            padding: 0.25rem;
+          }
         }
 
         .modal-image-sec {

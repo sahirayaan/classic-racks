@@ -184,8 +184,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         .pcard-img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
-          padding: 1rem;
+          object-fit: cover;
+          padding: 0;
           transition: transform 0.35s ease;
           display: block;
         }
@@ -218,10 +218,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           letter-spacing: 0.06em;
           background: rgba(11, 15, 25, 0.78);
           backdrop-filter: blur(6px);
-          color: var(--primary);
+          color: var(--accent);
           padding: 0.2rem 0.6rem;
           border-radius: 9999px;
-          border: 1px solid rgba(234, 88, 12, 0.35);
+          border: 1px solid rgba(255, 196, 0, 0.35);
           pointer-events: none;
         }
 
@@ -333,7 +333,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           }
 
           .pcard-img {
-            padding: 0.6rem;
+            padding: 0;
           }
 
           .pcard-body {

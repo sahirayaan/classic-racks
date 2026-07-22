@@ -618,8 +618,8 @@ export default function Home() {
         .cat-img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
-          padding: 0.75rem;
+          object-fit: cover;
+          padding: 0;
           transition: transform 0.35s ease;
         }
 
